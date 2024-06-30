@@ -1,5 +1,4 @@
 import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
-import * as React from 'react'
 
 import { clsx } from 'clsx'
 
@@ -30,5 +29,5 @@ export const Typography = <T extends ElementType = 'p'>(props: TextProps<T>) => 
   const classNames = clsx(s[variant], className ?? '')
   // const Component = as || 'p'
 
-  return <Component {...rest} className={classNames} />
+  return <Component className={classNames} {...rest} />
 }
