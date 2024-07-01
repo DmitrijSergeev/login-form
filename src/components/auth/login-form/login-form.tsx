@@ -1,5 +1,6 @@
 import { useController, useForm } from 'react-hook-form'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 import { Button } from '../../ui/button'
@@ -23,7 +24,9 @@ export const LoginForm = () => {
     formState: { errors },
     handleSubmit,
     register,
-  } = useForm<FormValues>()
+  } = useForm<FormValues>({
+    resolver: zodResolver(loginSchema),
+  })
 
   //console.log(register('email'))
 
