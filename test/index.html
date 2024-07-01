@@ -6,14 +6,49 @@
 </head>
 <body>
 
-<form action="login.html" method="post">
+<form>
     <label>
         <input type="email" name="email"/>
         <input type="password" name="password"/>
         <input type="checkbox" name="rememberMe"/>
         <button>Sign In</button>
     </label>
+    <h1 id="result"></h1>
 </form>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const email = document.querySelector('input[name="email"]').value;
+        const password = document.querySelector('input[name="password"]').value;
+        const rememberMe = document.querySelector('input[name="rememberMe"]').checked;
+
+        fetch("https://api.flashcards.andrii.es/v1/auth/login", {
+            method:"post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                rememberMe
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Hello World!';
+                // if (data.ok){
+                //     document.getElementById('result').innerText = 'Hello World!';
+                //     //window.location.href = "https://api.flashcards.andrii.es/v1/auth/login";
+                // } else {
+                //     alert(data.message);
+                // }
+            })
+            .catch(error => {
+                console.error('Error', error);
+            });
+    });
+</script>
 
 </body>
 </html>
