@@ -1,8 +1,15 @@
 import { useController, useForm } from 'react-hook-form'
 
+import { z } from 'zod'
+
 import { Button } from '../../ui/button'
 import { Checkbox } from '../../ui/checkbox'
 import { TextField } from '../../ui/text-field'
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(3),
+})
 
 type FormValues = {
   email: string
@@ -11,7 +18,12 @@ type FormValues = {
 }
 
 export const LoginForm = () => {
-  const { control, handleSubmit, register } = useForm<FormValues>()
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<FormValues>()
 
   //console.log(register('email'))
 
@@ -23,10 +35,20 @@ export const LoginForm = () => {
     console.log(data)
   })
 
+  console.log(value)
+
   return (
     <form onSubmit={onSubmit}>
-      <TextField {...register('email')} label={'Email'} />
-      <TextField {...register('password')} label={'Password'} />
+      <TextField
+        {...register('email', { minLength: { message: 'Too short', value: 8 } })}
+        errorMessage={errors.email?.message}
+        label={'Email'}
+      />
+      <TextField
+        {...register('password', { minLength: { message: 'Too short', value: 8 } })}
+        errorMessage={errors.password?.message}
+        label={'Password'}
+      />
       <Checkbox
         checked={value}
         disabled={disabled}
