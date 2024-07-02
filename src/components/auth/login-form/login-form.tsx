@@ -1,24 +1,24 @@
-import { useController, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 import { Button } from '../../ui/button'
-import { Checkbox } from '../../ui/checkbox'
+import { FormCheckbox } from '../../ui/checkbox/form-checkbox/form-checkbox'
 import { TextField } from '../../ui/text-field'
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(3),
+  rememberMe: z.boolean().default(false),
 })
 
-type FormValues = {
-  email: string
-  password: string
-  rememberMe: boolean
+type Props = {
+  onSubmit: (data: FormValues) => void
 }
+type FormValues = z.infer<typeof loginSchema>
 
-export const LoginForm = () => {
+export const LoginForm = ({ onSubmit }: Props) => {
   const {
     control,
     formState: { errors },
@@ -28,20 +28,16 @@ export const LoginForm = () => {
     resolver: zodResolver(loginSchema),
   })
 
-  //console.log(register('email'))
-
-  const {
-    field: { disabled, name, onBlur, onChange, ref, value },
-  } = useController({ control, name: 'rememberMe' })
-
-  const onSubmit = handleSubmit(data => {
-    console.log(data)
-  })
-
-  console.log(value)
+  // const {
+  //   field: { disabled, name, onBlur, onChange, ref, value },
+  // } = useController({ control, name: 'rememberMe' })
 
   return (
-    <form onSubmit={onSubmit}>
+    <form
+      onSubmit={handleSubmit(data => {
+        onSubmit(data)
+      })}
+    >
       <TextField
         {...register('email', { minLength: { message: 'Too short', value: 8 } })}
         errorMessage={errors.email?.message}
@@ -52,15 +48,7 @@ export const LoginForm = () => {
         errorMessage={errors.password?.message}
         label={'Password'}
       />
-      <Checkbox
-        checked={value}
-        disabled={disabled}
-        label={'rememberMe'}
-        name={name}
-        onBlur={onBlur}
-        onCheckedChange={onChange}
-        ref={ref}
-      />
+      <FormCheckbox control={control} label={'rememberMe'} name={'rememberMe'} />
       <Button type={'submit'}>Submit</Button>
     </form>
   )
