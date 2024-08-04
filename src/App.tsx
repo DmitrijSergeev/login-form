@@ -1,15 +1,30 @@
 import { useEffect } from 'react'
 
-import { apiUsers } from './api/api'
+import s from './App.module.scss'
 
+import { fetchUsers } from './modules/users/usersSlice'
+import { useAppDispatch, useAppSelector } from './store/store'
 export function App() {
+  const dispatch = useAppDispatch()
+  const users = useAppSelector(state => state.users)
+
   useEffect(() => {
-    apiUsers.getUsers().then(res => {
-      const users = res.data
+    dispatch(fetchUsers())
+    console.log(users)
+  }, [dispatch])
 
-      console.log(users)
-    })
-  }, [])
-
-  return <div>Hello</div>
+  return (
+    <div>
+      <ul>
+        {users.map(u => {
+          return (
+            <li className={s.u} key={u.id}>
+              {u.name}
+            </li>
+          )
+        })}
+      </ul>
+      Hello
+    </div>
+  )
 }
