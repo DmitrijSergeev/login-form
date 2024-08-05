@@ -12,7 +12,6 @@ export function App() {
   useEffect(() => {
     dispatch(fetchUsers())
   }, [dispatch])
-  console.log(users)
 
   return (
     <div>

@@ -1,15 +1,15 @@
-import { FormEventHandler } from 'react'
+import { useForm } from 'react-hook-form'
 
 import s from './login-form.module.scss'
 
 export const LoginForm = () => {
-  const onSubmit: FormEventHandler<HTMLFormElement> = e => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData)
+  const { handleSubmit, register } = useForm()
 
+  const onSubmit = handleSubmit(data => {
     console.log(data)
-  }
+  })
+
+  //console.log(register('user'))
 
   return (
     <div>
@@ -18,15 +18,15 @@ export const LoginForm = () => {
           <label className={s.label} htmlFor={'user'}>
             username
           </label>
-          <input className={s.input} id={'user'} name={'user'} required type={'email'} />
+          <input className={s.input} id={'user'} {...register('user')} />
         </div>
         <div>
           <label className={s.label} htmlFor={'password'}>
             password
           </label>
-          <input className={s.input} id={'password'} name={'password'} type={'password'} />
+          <input className={s.input} id={'password'} {...register('password')} />
         </div>
-        <button className={s.button} type={'button'}>
+        <button className={s.button} type={'submit'}>
           send
         </button>
       </form>
