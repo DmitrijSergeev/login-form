@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+// import { createSlice } from '@reduxjs/toolkit'
 import { Dispatch } from 'redux'
 
 import { apiUsers } from '../../api/api'
@@ -37,11 +37,11 @@ export type UsersType = User
 
 const initialState: UsersType[] = []
 
-const slice = createSlice({
-  initialState: {},
-  name: '',
-  reducers: {},
-})
+// const slice = createSlice({
+//   initialState: {},
+//   name: '',
+//   reducers: {},
+// })
 
 export const userReducer = (state = initialState, action: ActionsType): UsersType[] => {
   switch (action.type) {

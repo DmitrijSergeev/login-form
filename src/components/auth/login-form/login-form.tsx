@@ -1,55 +1,35 @@
-import { useForm } from 'react-hook-form'
+import { FormEventHandler } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import s from './login-form.module.scss'
 
-import { Button } from '../../ui/button'
-import { FormCheckbox } from '../../ui/checkbox/form-checkbox/form-checkbox'
-import { TextField } from '../../ui/text-field'
+export const LoginForm = () => {
+  const onSubmit: FormEventHandler<HTMLFormElement> = e => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const data = Object.fromEntries(formData)
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(3),
-  rememberMe: z.boolean().default(false),
-})
-
-type Props = {
-  onSubmit: (data: FormValues) => void
-}
-type FormValues = z.infer<typeof loginSchema>
-
-export const LoginForm = ({ onSubmit }: Props) => {
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    register,
-  } = useForm<FormValues>({
-    resolver: zodResolver(loginSchema),
-  })
-
-  // const {
-  //   field: { disabled, name, onBlur, onChange, ref, value },
-  // } = useController({ control, name: 'rememberMe' })
+    console.log(data)
+  }
 
   return (
-    <form
-      onSubmit={handleSubmit(data => {
-        onSubmit(data)
-      })}
-    >
-      <TextField
-        {...register('email', { minLength: { message: 'Too short', value: 8 } })}
-        errorMessage={errors.email?.message}
-        label={'Email'}
-      />
-      <TextField
-        {...register('password', { minLength: { message: 'Too short', value: 8 } })}
-        errorMessage={errors.password?.message}
-        label={'Password'}
-      />
-      <FormCheckbox control={control} label={'rememberMe'} name={'rememberMe'} />
-      <Button type={'submit'}>Submit</Button>
-    </form>
+    <div>
+      <form className={s.form} onSubmit={onSubmit}>
+        <div>
+          <label className={s.label} htmlFor={'user'}>
+            username
+          </label>
+          <input className={s.input} id={'user'} name={'user'} required type={'email'} />
+        </div>
+        <div>
+          <label className={s.label} htmlFor={'password'}>
+            password
+          </label>
+          <input className={s.input} id={'password'} name={'password'} type={'password'} />
+        </div>
+        <button className={s.button} type={'button'}>
+          send
+        </button>
+      </form>
+    </div>
   )
 }
