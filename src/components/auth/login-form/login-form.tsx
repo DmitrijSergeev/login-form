@@ -1,39 +1,55 @@
 import { useForm } from 'react-hook-form'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
 import s from './login-form.module.scss'
 
-type LoginFormProps = {
-  password?: string
-  rememberMe?: boolean
-  userName?: string
-}
+import { TextField } from '../../ui/text-field'
+
+const loginShema = z.object({
+  email: z.string().email(),
+  password: z.string().min(3),
+  rememberMe: z.boolean(),
+})
+
+type LoginFormProps = z.infer<typeof loginShema>
 
 export const LoginForm = (props: LoginFormProps) => {
   const {} = props
-  const { handleSubmit, register } = useForm<LoginFormProps>()
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<LoginFormProps>({
+    resolver: zodResolver(loginShema),
+  })
+
+  // const emailRegex =
+  //   /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
 
   const onSubmit = handleSubmit(data => {
     console.log(data)
   })
 
-  //console.log(register('user'))
-
   return (
     <div>
       <form className={s.form} onSubmit={onSubmit}>
-        <div>
-          <label className={s.label} htmlFor={'user'}>
-            username
+        <div className={s.root}>
+          <label className={s.label} htmlFor={'email'}>
+            email
           </label>
-          <input className={s.input} id={'user'} {...register('userName')} type={'email'} />
+          <TextField className={s.input} id={'email'} {...register('email')} type={'email'} />
+          {errors.email?.message && <p className={'text-red-500'}>{errors.email?.message}</p>}
         </div>
         <div>
           <label className={s.label} htmlFor={'password'}>
             password
           </label>
           <input className={s.input} id={'password'} {...register('password')} type={'password'} />
+          {errors.password?.message && <p style={{ color: 'red' }}>{errors.password?.message}</p>}
         </div>
-        <div>
+        <div className={s.checkbox}>
           <label className={s.label} htmlFor={'rememberMe'}>
             rememberMe
           </label>
